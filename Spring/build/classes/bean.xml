@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util
+	http://www.springframework.org/schema/util/spring-util-3.0.xsd
+	">
+	<util:properties id="confTest" location="classpath:test_zh_CN.properties"></util:properties>
+	<bean class="com.liutianqing.listener.EmailNotifier"/>
+	
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+	<property name="basenames">
+	<list>
+	<value>message</value>
+	</list>
+	</property>
+	</bean>
+	<bean id="personService" class="com.liutianqing.services.PersonService">
+		<property name="name" value="wawa"/>
+	</bean>
+	<bean id="chineseTemplate" class="com.liutianqing.services.Chinese">
+	<property name="axe" ref="steelAxe"></property>
+	</bean>
+	<bean id="chinese" parent="chineseTemplate">
+	<property name="axe" ref="stoneAxe" />
+	</bean>
+	
+	<bean id="chinese2" class="com.liutianqing.services.Chinese2">
+	<constructor-arg ref="stoneAxe"></constructor-arg>
+	</bean>
+	<bean id="american2" class="com.liutianqing.factory.PersonFactory2"></bean>
+	<bean id="french" class="com.liutianqing.services.French"/>
+	<bean id="chinois" class="com.liutianqing.services.Chinois" init-method="init" destroy-method="close" />
+	<bean id="japanese" class="com.liutianqing.services.Japanese">
+	<lookup-method name="getAxe" bean="steelAxe"/>
+	</bean>
+	
+	<bean id="stoneAxe" class="com.liutianqing.services.StoneAxe"></bean>
+	<bean id="steelAxe" class="com.liutianqing.services.SteelAxe" scope="prototype"></bean>
+	<bean id="example" class="com.liutianqing.services.ExampleBean">
+	<property name="integerProperty" value="1"></property>
+	<property name="doubleProperty" value="2.3"></property>
+	</bean>
+	
+	<bean id="chinese3" class="com.liutianqing.services.Chinese3">
+	<property name="schools">
+	<list>
+	<value>Middle school</value>
+	<value>high school</value>
+	<value>University</value>
+	</list>
+	</property>
+	<property name="scores">
+	<map>
+	<entry key="math" value="12"></entry>
+	<entry key="English" value="14"></entry>
+	<entry key="Chinese" value="10"></entry>
+	</map>
+	
+	</property>
+	<property name="phaseAxes">
+	<map>
+	<entry key="begin" value-ref="stoneAxe"></entry>
+	<entry key="after" value-ref="steelAxe"></entry>
+	</map>
+	</property>
+	<property name="health">
+	<props>
+	<prop key="poids">65kg</prop>
+	<prop key="mesure">1.70</prop>
+	</props>
+	
+	</property>
+	<property name="axes">
+	<set>
+	<value>blablabla</value>
+	<bean class="com.liutianqing.services.SteelAxe"/>
+	<ref local="stoneAxe"/>
+	</set>
+	</property>
+	<property name="books">
+	<list>
+	<value>think in java</value>
+	<value>CSS for ever</value>
+	<value>Steve jobs</value>
+	</list>
+	
+	</property>
+	</bean>
+	<bean id="dog" class="com.liutianqing.factory.BeingFactory" factory-method="getBeing">
+	<constructor-arg value="dog"></constructor-arg>
+	<property name="msg" value="This is a dog">
+	
+	</property>
+	</bean>
+	<bean id="cat" class="com.liutianqing.factory.BeingFactory" factory-method="getBeing">
+	<constructor-arg value="cat"></constructor-arg>
+	<property name="msg" value="This is a cat"></property>
+	</bean>
+	
+	<bean id="personFactory" class="com.liutianqing.factory.PersonFactory"></bean>
+	<bean id="francais" factory-bean="personFactory" factory-method="getPerson">
+	<constructor-arg value="fr"></constructor-arg>
+	</bean>
+	<bean id="american" factory-bean="personFactory" factory-method="getPerson">
+	<constructor-arg value="us"></constructor-arg>
+	</bean>
+	<bean id="author" class="com.liutianqing.services.Author" 
+	p:name="#{T(java.lang.Math).random()}"
+	p:axe="#{new com.liutianqing.services.SteelAxe()}">
+	<property name="books">
+	<list>
+	<value>#{confTest.a}</value>
+	<value>#{confTest.b}</value>
+	</list>
+	</property>
+	</bean>
+</beans>
